@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
@@ -18,8 +18,8 @@ class ProductListFragment : Fragment() {
 
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
-    private val args: ProductListFragmentArgs by navArgs()
     private lateinit var productAdapter: ProductAdapter
+    private var category: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +32,9 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        // Get category from arguments
+        category = arguments?.getString("category") ?: ""
         
         setupViews()
         setupProductList()
@@ -56,14 +59,16 @@ class ProductListFragment : Fragment() {
         }
 
         // Set search hint based on category
-        binding.searchEditText.hint = "Cari ${args.category}..."
+        binding.searchEditText.hint = "Cari $category..."
     }
 
     private fun setupProductList() {
         productAdapter = ProductAdapter { product ->
             // Navigate to product detail
-            val action = ProductListFragmentDirections.actionProductListFragmentToProductDetailFragment(product.id)
-            findNavController().navigate(action)
+            val bundle = Bundle().apply {
+                putString("productId", product.id)
+            }
+            findNavController().navigate(R.id.action_productListFragment_to_productDetailFragment, bundle)
         }
 
         binding.productRecyclerView.apply {
@@ -74,7 +79,7 @@ class ProductListFragment : Fragment() {
 
     private fun loadProducts() {
         // Sample products based on category
-        val products = when (args.category) {
+        val products = when (category) {
             "TukuBuah" -> getSampleFruits()
             "TukuSayur" -> getSampleVegetables()
             "TukuBumbu" -> getSampleSpices()

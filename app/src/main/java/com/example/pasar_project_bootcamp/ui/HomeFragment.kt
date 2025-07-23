@@ -59,8 +59,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToProductList(category: String) {
-        val action = HomeFragmentDirections.actionHomeFragmentToProductListFragment(category)
-        findNavController().navigate(action)
+        val bundle = Bundle().apply {
+            putString("category", category)
+        }
+        findNavController().navigate(R.id.action_homeFragment_to_productListFragment, bundle)
     }
 
     override fun onDestroyView() {

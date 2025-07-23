@@ -79,8 +79,10 @@ class SearchFragment : Fragment() {
     private fun performSearch() {
         val query = binding.searchEditText.text.toString().trim()
         if (query.isNotEmpty()) {
-            val action = SearchFragmentDirections.actionSearchFragmentToProductListFragment(query)
-            findNavController().navigate(action)
+            val bundle = Bundle().apply {
+                putString("category", query)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_productListFragment, bundle)
         }
     }
 
