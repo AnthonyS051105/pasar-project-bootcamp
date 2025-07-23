@@ -20,9 +20,14 @@
         android:name="com.example.pasar_project_bootcamp.ui.OrderDetailFragment"
         android:label="Order Detail"
         tools:layout="@layout/fragment_order_detail">
+
         <action
             android:id="@+id/action_orderDetail_to_payment"
             app:destination="@id/paymentFragment" />
+
+        <action
+            android:id="@+id/action_orderDetail_to_recipe"
+            app:destination="@id/recipeFragment" />
     </fragment>
 
     <fragment
@@ -31,4 +36,9 @@
         android:label="Payment"
         tools:layout="@layout/fragment_payment" />
 
+    <fragment
+        android:id="@+id/recipeFragment"
+        android:name="com.example.pasar_project_bootcamp.ui.RecipeFragment"
+        android:label="Recipe Inspiration"
+        tools:layout="@layout/fragment_recipe" />
 </navigation>

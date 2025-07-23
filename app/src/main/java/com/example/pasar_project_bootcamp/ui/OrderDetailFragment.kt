@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -76,6 +77,37 @@ class OrderDetailFragment : Fragment() {
         binding.tvTotalAmount.text = formatCurrency(total)
     }
 
+    // Implementasi Anda sendiri untuk mengambil ingredients dari cart
+    private fun getIngredientsFromYourCart(): ArrayList<String> {
+        // Contoh sederhana - Anda sesuaikan dengan struktur data Anda
+        val ingredients = ArrayList<String>()
+
+        // Ambil dari cartItems, orderItems, atau apapun struktur data Anda
+        // Contoh:
+        ingredients.add("ayam")
+        ingredients.add("bawang merah")
+        ingredients.add("tomat")
+        ingredients.add("cabai")
+
+        return ingredients
+    }
+
+    private fun openRecipeInspiration() {
+        val ingredients = getIngredientsFromYourCart()
+
+        if (ingredients.isEmpty()) {
+            Toast.makeText(requireContext(), "Tidak ada bahan untuk membuat resep", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putStringArrayList("ingredients", ingredients)
+        }
+
+        findNavController().navigate(R.id.action_orderDetail_to_recipe, bundle)
+    }
+
+
     private fun setupClickListeners() {
         with(binding) {
             btnBack.setOnClickListener {
@@ -83,8 +115,8 @@ class OrderDetailFragment : Fragment() {
             }
 
             btnRecipeInspiration.setOnClickListener {
-                // Navigate to recipe inspiration or show dialog
-                // Implementation would show cooking recipes based on cart items
+                openRecipeInspiration()
+
             }
 
             btnPesan.setOnClickListener {
