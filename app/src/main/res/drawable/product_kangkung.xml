@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Kangkung leaves -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M60,40C80,35 90,50 85,70C80,85 70,90 60,85C50,80 45,65 50,50C52,45 56,42 60,40Z"/>
+    
+    <path
+        android:fillColor="#66BB6A"
+        android:pathData="M80,50C100,45 110,60 105,80C100,95 90,100 80,95C70,90 65,75 70,60C72,55 76,52 80,50Z"/>
+    
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,60C120,55 130,70 125,90C120,105 110,110 100,105C90,100 85,85 90,70C92,65 96,62 100,60Z"/>
+    
+    <path
+        android:fillColor="#66BB6A"
+        android:pathData="M120,70C140,65 150,80 145,100C140,115 130,120 120,115C110,110 105,95 110,80C112,75 116,72 120,70Z"/>
+    
+    <!-- Stems -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M65,85L70,160C70,165 68,165 65,160L60,85"/>
+    
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M85,95L90,160C90,165 88,165 85,160L80,95"/>
+    
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M105,105L110,160C110,165 108,165 105,160L100,105"/>
+    
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M125,115L130,160C130,165 128,165 125,160L120,115"/>
+</vector>

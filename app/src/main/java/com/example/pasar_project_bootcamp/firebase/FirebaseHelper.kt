@@ -1,9 +1,7 @@
 package com.example.pasar_project_bootcamp.firebase
 
-import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.auth.FirebaseAuth
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.data.Order
@@ -13,7 +11,6 @@ import java.util.UUID
 class FirebaseHelper {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
     companion object {
@@ -212,21 +209,11 @@ class FirebaseHelper {
             }
     }
 
-    // Image Upload
-    fun uploadProductImage(imageUri: Uri, callback: (Boolean, String?) -> Unit) {
-        val filename = "products/${UUID.randomUUID()}.jpg"
-        val imageRef = storage.reference.child(filename)
-        
-        imageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    callback(true, downloadUri.toString())
-                }
-            }
-            .addOnFailureListener { exception ->
-                callback(false, exception.message)
-            }
-    }
+    // Note: Image upload removed - using local drawable resources instead
+    // If you need image upload later, you can use third-party services like:
+    // - Cloudinary (free tier available)
+    // - ImgBB API
+    // - Your own server
 
     // User Profile
     fun saveUserProfile(userId: String, userData: Map<String, Any>, callback: (Boolean) -> Unit) {

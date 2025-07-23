@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.ItemProductBinding
+import com.example.pasar_project_bootcamp.utils.ProductImageHelper
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -41,15 +42,33 @@ class ProductAdapter(
                 val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
                 productPrice.text = formatter.format(product.price)
 
-                // Load product image or use placeholder
-                if (product.imageUrl.isNotEmpty()) {
-                    Glide.with(itemView.context)
-                        .load(product.imageUrl)
-                        .placeholder(R.drawable.ic_store)
-                        .error(R.drawable.ic_store)
-                        .into(productImage)
-                } else {
-                    productImage.setImageResource(R.drawable.ic_store)
+                // Load product image - handle different sources
+                when {
+                    product.imageUrl.startsWith("http") -> {
+                        // Load from URL (Firebase Storage)
+                        Glide.with(itemView.context)
+                            .load(product.imageUrl)
+                            .placeholder(ProductImageHelper.getProductImageResource(product.name, product.category))
+                            .error(ProductImageHelper.getProductImageResource(product.name, product.category))
+                            .into(productImage)
+                    }
+                    product.imageUrl.startsWith("drawable://") -> {
+                        // Load from drawable reference
+                        val drawableName = product.imageUrl.removePrefix("drawable://")
+                        val imageResource = when (drawableName) {
+                            "product_apel" -> R.drawable.product_apel
+                            "product_jeruk" -> R.drawable.product_jeruk
+                            "product_kangkung" -> R.drawable.product_kangkung
+                            "product_cabai" -> R.drawable.product_cabai
+                            else -> ProductImageHelper.getProductImageResource(product.name, product.category)
+                        }
+                        productImage.setImageResource(imageResource)
+                    }
+                    else -> {
+                        // Use helper to determine image based on name/category
+                        val imageResource = ProductImageHelper.getProductImageResource(product.name, product.category)
+                        productImage.setImageResource(imageResource)
+                    }
                 }
 
                 // Set click listeners
