@@ -1,0 +1,104 @@
+{
+  "products": [
+    {
+      "name": "Buah Apel Malang",
+      "price": 150000.0,
+      "category": "Buah",
+      "description": "Buah apel segar dari petani lokal Malang, dipetik langsung dari kebun",
+      "imageUrl": "https://example.com/images/apel-malang.jpg",
+      "farmerId": "farmer001",
+      "farmerName": "Pak Budi",
+      "location": "Malang, Jawa Timur",
+      "quantity": 20,
+      "unit": "kg",
+      "createdAt": 1640995200000
+    },
+    {
+      "name": "Sayur Kangkung Organik",
+      "price": 25000.0,
+      "category": "Sayur",
+      "description": "Kangkung organik segar tanpa pestisida, dipanen pagi hari",
+      "imageUrl": "https://example.com/images/kangkung.jpg",
+      "farmerId": "farmer002",
+      "farmerName": "Bu Sari",
+      "location": "Bandung, Jawa Barat",
+      "quantity": 15,
+      "unit": "ikat",
+      "createdAt": 1640995140000
+    },
+    {
+      "name": "Cabai Merah Keriting",
+      "price": 85000.0,
+      "category": "Bumbu",
+      "description": "Cabai merah keriting segar dengan tingkat kepedasan sedang",
+      "imageUrl": "https://example.com/images/cabai-merah.jpg",
+      "farmerId": "farmer003",
+      "farmerName": "Pak Joko",
+      "location": "Solo, Jawa Tengah",
+      "quantity": 10,
+      "unit": "kg",
+      "createdAt": 1640995080000
+    },
+    {
+      "name": "Benih Padi Unggul",
+      "price": 120000.0,
+      "category": "Benih",
+      "description": "Benih padi varietas unggul dengan hasil panen tinggi",
+      "imageUrl": "https://example.com/images/benih-padi.jpg",
+      "farmerId": "farmer004",
+      "farmerName": "Pak Ahmad",
+      "location": "Yogyakarta, DIY",
+      "quantity": 50,
+      "unit": "kg",
+      "createdAt": 1640995020000
+    },
+    {
+      "name": "Tomat Cherry",
+      "price": 45000.0,
+      "category": "Sayur",
+      "description": "Tomat cherry manis dan segar, cocok untuk salad",
+      "imageUrl": "https://example.com/images/tomat-cherry.jpg",
+      "farmerId": "farmer005",
+      "farmerName": "Bu Rina",
+      "location": "Bogor, Jawa Barat",
+      "quantity": 8,
+      "unit": "kg",
+      "createdAt": 1640994960000
+    },
+    {
+      "name": "Jeruk Pontianak",
+      "price": 35000.0,
+      "category": "Buah",
+      "description": "Jeruk pontianak manis dan segar langsung dari kebun",
+      "imageUrl": "https://example.com/images/jeruk-pontianak.jpg",
+      "farmerId": "farmer006",
+      "farmerName": "Pak Hasan",
+      "location": "Pontianak, Kalimantan Barat",
+      "quantity": 25,
+      "unit": "kg",
+      "createdAt": 1640994900000
+    }
+  ],
+  "categories": [
+    {
+      "name": "TukuBuah",
+      "iconRes": "ic_fruit",
+      "backgroundColor": "green_light"
+    },
+    {
+      "name": "TukuSayur",
+      "iconRes": "ic_vegetable", 
+      "backgroundColor": "green_light"
+    },
+    {
+      "name": "TukuBumbu",
+      "iconRes": "ic_spice",
+      "backgroundColor": "green_light"
+    },
+    {
+      "name": "TukuBenih",
+      "iconRes": "ic_seed",
+      "backgroundColor": "green_light"
+    }
+  ]
+}
