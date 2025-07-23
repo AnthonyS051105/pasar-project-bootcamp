@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/android-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4CAF50"
+    android:orientation="vertical">
+
+    <!-- Status Bar Space -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="#4CAF50" />
+
+    <!-- Top Bar with Search -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4CAF50"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_search"
+            android:tint="@android:color/white" />
+
+        <!-- Search Bar -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="Cari produk..."
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Filter Button -->
+        <ImageView
+            android:id="@+id/filterButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_search"
+            android:tint="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- Products Grid -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:padding="16dp" />
+
+</LinearLayout>

@@ -1,33 +1,33 @@
 {
   "project_info": {
     "project_number": "123456789",
-    "project_id": "pasar-petani-marketplace",
-    "storage_bucket": "pasar-petani-marketplace.appspot.com"
+    "project_id": "pasar-project-bootcamp",
+    "storage_bucket": "pasar-project-bootcamp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123456789:android:abcdef123456",
+        "mobilesdk_app_id": "1:123456789:android:abcdef123456789",
         "android_client_info": {
           "package_name": "com.example.pasar_project_bootcamp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "123456789-abcdef.apps.googleusercontent.com",
+          "client_id": "123456789-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyExample-Key-Replace-With-Real"
+          "current_key": "AIzaSyDummyKeyForDevelopment123456789"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "123456789-abcdef.apps.googleusercontent.com",
+              "client_id": "123456789-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
