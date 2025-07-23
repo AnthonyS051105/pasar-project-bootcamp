@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pasar_project_bootcamp.BuildConfig
 import com.example.pasar_project_bootcamp.databinding.FragmentRecipeBinding
 import com.example.pasar_project_bootcamp.ui.adapter.RecipeAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -102,7 +103,7 @@ class RecipeFragment : Fragment() {
     }
 
     private fun generateRecipeFromAI(ingredients: List<String>) {
-        val apiKey = "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"
+        val apiKey = BuildConfig.OPENROUTER_API_KEY
         val bahanText = ingredients.joinToString(", ")
 
         Log.d(TAG, "Generating recipe with ingredients: $bahanText")
@@ -126,7 +127,7 @@ class RecipeFragment : Fragment() {
         val json = JSONObject().apply {
             put("model", "deepseek/deepseek-r1:free")
             put("prompt", prompt)
-            put("max_tokens", 800)
+            put("max_tokens", 2000)
             put("temperature", 0.7)
         }
 
