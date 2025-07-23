@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">pasar-project-bootcamp</string>
+    <string name="app_name">Pasar Petani</string>
+    <string name="welcome_message">Hai, John Doe!</string>
+    <string name="balance_label">Saldo TukuPay Kamu</string>
+    <string name="balance_amount">Rp 150.000,00</string>
+    <string name="search_hint">Cari produk...</string>
+    <string name="recommendations_title">Rekomendasi</string>
+    <string name="search_suggestions_title">Apakah ini yang kamu cari:</string>
 </resources>
