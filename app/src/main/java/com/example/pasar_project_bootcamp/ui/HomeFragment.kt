@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.databinding.FragmentHomeBinding
+import com.example.pasar_project_bootcamp.utils.SampleDataUploader
+import android.widget.Toast
 
 class HomeFragment : Fragment() {
 
@@ -27,6 +29,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         setupClickListeners()
+        
+        // DEVELOPMENT ONLY: Upload sample data on first launch
+        // Remove this in production
+        uploadSampleDataIfNeeded()
     }
 
     private fun setupClickListeners() {
@@ -63,6 +69,24 @@ class HomeFragment : Fragment() {
             putString("category", category)
         }
         findNavController().navigate(R.id.action_homeFragment_to_productListFragment, bundle)
+    }
+
+    // DEVELOPMENT ONLY: Remove in production
+    private fun uploadSampleDataIfNeeded() {
+        val sharedPrefs = requireContext().getSharedPreferences("app_prefs", 0)
+        val isDataUploaded = sharedPrefs.getBoolean("sample_data_uploaded", false)
+        
+        if (!isDataUploaded) {
+            val uploader = SampleDataUploader()
+            uploader.uploadSampleProducts { success ->
+                if (success) {
+                    sharedPrefs.edit().putBoolean("sample_data_uploaded", true).apply()
+                    activity?.runOnUiThread {
+                        Toast.makeText(context, "Sample data uploaded to Firebase", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

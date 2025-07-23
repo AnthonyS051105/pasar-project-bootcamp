@@ -13,6 +13,7 @@ import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.FragmentProductListBinding
 import com.example.pasar_project_bootcamp.ui.adapter.ProductAdapter
+import com.example.pasar_project_bootcamp.firebase.FirebaseHelper
 
 class ProductListFragment : Fragment() {
 
@@ -20,6 +21,7 @@ class ProductListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var productAdapter: ProductAdapter
     private var category: String = ""
+    private val firebaseHelper = FirebaseHelper()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +80,40 @@ class ProductListFragment : Fragment() {
     }
 
     private fun loadProducts() {
-        // Sample products based on category
+        // Show loading state
+        binding.productRecyclerView.alpha = 0.5f
+        
+        if (category.isNotEmpty() && category.startsWith("Tuku")) {
+            // Load products by category from Firebase
+            firebaseHelper.getProductsByCategory(category) { products ->
+                activity?.runOnUiThread {
+                    binding.productRecyclerView.alpha = 1.0f
+                    if (products.isNotEmpty()) {
+                        productAdapter.submitList(products)
+                    } else {
+                        // Fallback to sample data if no products in Firebase
+                        loadSampleProducts()
+                    }
+                }
+            }
+        } else {
+            // Search query - search in Firebase
+            firebaseHelper.searchProducts(category) { products ->
+                activity?.runOnUiThread {
+                    binding.productRecyclerView.alpha = 1.0f
+                    if (products.isNotEmpty()) {
+                        productAdapter.submitList(products)
+                    } else {
+                        // Fallback to sample data if no results
+                        loadSampleProducts()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadSampleProducts() {
+        // Fallback sample products
         val products = when (category) {
             "TukuBuah" -> getSampleFruits()
             "TukuSayur" -> getSampleVegetables()
@@ -86,7 +121,6 @@ class ProductListFragment : Fragment() {
             "TukuBenih" -> getSampleSeeds()
             else -> getAllSampleProducts()
         }
-
         productAdapter.submitList(products)
     }
 

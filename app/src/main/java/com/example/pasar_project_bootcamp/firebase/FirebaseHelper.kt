@@ -1,17 +1,27 @@
 package com.example.pasar_project_bootcamp.firebase
 
+import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.auth.FirebaseAuth
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.data.Order
 import com.example.pasar_project_bootcamp.data.CartItem
+import java.util.UUID
 
 class FirebaseHelper {
 
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
+
+    companion object {
+        private const val COLLECTION_PRODUCTS = "products"
+        private const val COLLECTION_USERS = "users"
+        private const val COLLECTION_ORDERS = "orders"
+        private const val COLLECTION_CART = "cart"
+    }
 
     // Products Collection
     fun getProducts(callback: (List<Product>) -> Unit) {
@@ -130,5 +140,116 @@ class FirebaseHelper {
 
     fun isUserLoggedIn(): Boolean {
         return auth.currentUser != null
+    }
+
+    fun signInWithEmail(email: String, password: String, callback: (Boolean, String?) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }
+    }
+
+    fun signUpWithEmail(email: String, password: String, callback: (Boolean, String?) -> Unit) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }
+    }
+
+    fun signOut() {
+        auth.signOut()
+    }
+
+    // Enhanced Products Functions
+    fun getProductsByCategory(category: String, callback: (List<Product>) -> Unit) {
+        firestore.collection(COLLECTION_PRODUCTS)
+            .whereEqualTo("category", category)
+            .get()
+            .addOnSuccessListener { documents ->
+                val products = documents.map { doc ->
+                    doc.toObject(Product::class.java).copy(id = doc.id)
+                }
+                callback(products)
+            }
+            .addOnFailureListener {
+                callback(emptyList())
+            }
+    }
+
+    fun searchProducts(query: String, callback: (List<Product>) -> Unit) {
+        firestore.collection(COLLECTION_PRODUCTS)
+            .orderBy("name")
+            .startAt(query)
+            .endAt(query + "\uf8ff")
+            .get()
+            .addOnSuccessListener { documents ->
+                val products = documents.map { doc ->
+                    doc.toObject(Product::class.java).copy(id = doc.id)
+                }
+                callback(products)
+            }
+            .addOnFailureListener {
+                callback(emptyList())
+            }
+    }
+
+    fun addProduct(product: Product, callback: (Boolean, String?) -> Unit) {
+        firestore.collection(COLLECTION_PRODUCTS)
+            .add(product)
+            .addOnSuccessListener { documentReference ->
+                callback(true, documentReference.id)
+            }
+            .addOnFailureListener { exception ->
+                callback(false, exception.message)
+            }
+    }
+
+    // Image Upload
+    fun uploadProductImage(imageUri: Uri, callback: (Boolean, String?) -> Unit) {
+        val filename = "products/${UUID.randomUUID()}.jpg"
+        val imageRef = storage.reference.child(filename)
+        
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    callback(true, downloadUri.toString())
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback(false, exception.message)
+            }
+    }
+
+    // User Profile
+    fun saveUserProfile(userId: String, userData: Map<String, Any>, callback: (Boolean) -> Unit) {
+        firestore.collection(COLLECTION_USERS)
+            .document(userId)
+            .set(userData)
+            .addOnSuccessListener { callback(true) }
+            .addOnFailureListener { callback(false) }
+    }
+
+    fun getUserProfile(userId: String, callback: (Map<String, Any>?) -> Unit) {
+        firestore.collection(COLLECTION_USERS)
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    callback(document.data)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
     }
 }
