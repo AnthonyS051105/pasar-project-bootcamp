@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pasar_project_bootcamp.BuildConfig
 import com.example.pasar_project_bootcamp.databinding.FragmentRecipeBinding
 import com.example.pasar_project_bootcamp.ui.adapter.RecipeAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -36,14 +37,6 @@ class RecipeFragment : Fragment() {
 
     companion object {
         private const val TAG = "RecipeFragment"
-
-        fun newInstance(ingredients: ArrayList<String>): RecipeFragment {
-            return RecipeFragment().apply {
-                arguments = Bundle().apply {
-                    putStringArrayList("ingredients", ingredients)
-                }
-            }
-        }
     }
 
     override fun onCreateView(
@@ -110,13 +103,14 @@ class RecipeFragment : Fragment() {
     }
 
     private fun generateRecipeFromAI(ingredients: List<String>) {
-        val apiKey = "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"
+        val apiKey = BuildConfig.OPENROUTER_API_KEY
         val bahanText = ingredients.joinToString(", ")
 
         Log.d(TAG, "Generating recipe with ingredients: $bahanText")
 
         val prompt = """
-            Buatkan resep masakan Indonesia sederhana menggunakan bahan: $bahanText
+            Misalkan kamu adalah seorang chef ternama
+            Buatkan resep masakan sederhana menggunakan bahan: $bahanText
             
             Format:
             JUDUL: [nama resep]
@@ -131,11 +125,12 @@ class RecipeFragment : Fragment() {
         """.trimIndent()
 
         val json = JSONObject().apply {
-            put("model", "deepseek-chat")
-            put("messages", listOf(mapOf("role" to "user", "content" to prompt)))
-            put("max_tokens", 800)
+            put("model", "deepseek/deepseek-r1:free")
+            put("prompt", prompt)
+            put("max_tokens", 2000)
             put("temperature", 0.7)
         }
+
 
         val body = json.toString().toRequestBody("application/json".toMediaType())
         val request = Request.Builder()
@@ -163,11 +158,18 @@ class RecipeFragment : Fragment() {
                             if (response.isSuccessful && responseBody != null) {
                                 try {
                                     val json = JSONObject(responseBody)
+
+                                    // Ambil konten dari "text" (bukan lagi "message.content")
                                     val content = json
                                         .getJSONArray("choices")
                                         .getJSONObject(0)
-                                        .getJSONObject("message")
-                                        .getString("content")
+                                        .getString("text")
+
+                                    if (content.isNullOrBlank()) {
+                                        Log.e(TAG, "Content kosong dari model")
+                                        showErrorState("Model tidak mengembalikan resep.")
+                                        return@launch
+                                    }
 
                                     parseAndDisplayRecipe(content)
                                 } catch (e: Exception) {
@@ -175,9 +177,11 @@ class RecipeFragment : Fragment() {
                                     showErrorState("Gagal memproses resep")
                                 }
                             } else {
-                                Log.e(TAG, "Unsuccessful response: ${response.code}")
+                                Log.e(TAG, "Unsuccessful response: ${response.code}, body: $responseBody")
                                 showErrorState("Server bermasalah")
                             }
+
+
                         }
                     }
                 })

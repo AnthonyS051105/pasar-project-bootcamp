@@ -79,18 +79,18 @@ class OrderDetailFragment : Fragment() {
 
     // Implementasi Anda sendiri untuk mengambil ingredients dari cart
     private fun getIngredientsFromYourCart(): ArrayList<String> {
-        // Contoh sederhana - Anda sesuaikan dengan struktur data Anda
         val ingredients = ArrayList<String>()
 
-        // Ambil dari cartItems, orderItems, atau apapun struktur data Anda
-        // Contoh:
-        ingredients.add("ayam")
-        ingredients.add("bawang merah")
-        ingredients.add("tomat")
-        ingredients.add("cabai")
+        for (item in cartItems) {
+            val name = item.product.name.trim()
+            if (name.isNotEmpty()) {
+                ingredients.add(name)
+            }
+        }
 
         return ingredients
     }
+
 
     private fun openRecipeInspiration() {
         val ingredients = getIngredientsFromYourCart()
