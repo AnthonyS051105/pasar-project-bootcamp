@@ -63,11 +63,11 @@ dependencies {
     implementation("androidx.activity:activity:1.10.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
-    // Firebase BOM
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    // Firebase BOM - Updated to latest stable version
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
+    // Removed Firebase Storage since it's not used in the app
 
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
@@ -79,14 +79,13 @@ dependencies {
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation(libs.google.firebase.auth)
 
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-    // build.gradle (Module)
+    // HTTP Client for API calls
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }

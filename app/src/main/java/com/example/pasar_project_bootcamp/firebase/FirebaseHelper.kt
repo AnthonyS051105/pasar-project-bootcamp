@@ -2,7 +2,6 @@ package com.example.pasar_project_bootcamp.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.auth.FirebaseAuth
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.data.Order
@@ -11,7 +10,6 @@ import com.example.pasar_project_bootcamp.data.CartItem
 class FirebaseHelper {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
     companion object {
