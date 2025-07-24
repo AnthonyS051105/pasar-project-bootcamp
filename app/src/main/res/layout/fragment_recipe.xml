@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:background="@color/gray_200" />
+                    android:src="@android:color/darker_gray" />
             </androidx.cardview.widget.CardView>
 
             <!-- Judul -->
@@ -106,4 +106,3 @@
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
-

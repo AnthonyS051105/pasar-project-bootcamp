@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.pasar_project_bootcamp.BuildConfig
 import com.example.pasar_project_bootcamp.databinding.FragmentRecipeBinding
 import com.example.pasar_project_bootcamp.ui.adapter.RecipeAdapter
@@ -19,6 +21,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
+import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
 class RecipeFragment : Fragment() {
@@ -66,7 +69,7 @@ class RecipeFragment : Fragment() {
 
     private fun setupUI() {
         binding.tvJudul.text = "Inspirasi Resep"
-        binding.ivRecipeInspiration.setBackgroundResource(android.R.color.darker_gray)
+        binding.ivRecipeInspiration.setImageResource(android.R.color.darker_gray)
 
         // Back button
         binding.btnBack.setOnClickListener {
@@ -250,10 +253,116 @@ class RecipeFragment : Fragment() {
                 else listOf("1. Data langkah tidak tersedia")
             )
 
+            // Load image berdasarkan judul resep
+            loadRecipeImage(title)
+
         } catch (e: Exception) {
             Log.e(TAG, "Error parsing recipe", e)
             showErrorState("Gagal menampilkan resep")
         }
+    }
+
+    private fun loadRecipeImage(recipeTitle: String) {
+        Log.d(TAG, "Starting image load for recipe: $recipeTitle")
+
+        // Langsung load gambar default dulu untuk memastikan ImageView berfungsi
+        loadDefaultRecipeImage()
+
+        // Cek apakah API key tersedia
+        val unsplashApiKey = BuildConfig.UNSPLASH_ACCESS_KEY
+        if (unsplashApiKey.isEmpty()) {
+            Log.w(TAG, "Unsplash API key tidak tersedia, menggunakan gambar default")
+            return
+        }
+
+        // Kemudian coba cari gambar dari Unsplash
+        val searchQuery = "$recipeTitle food recipe Indonesian"
+        Log.d(TAG, "Searching image for: $searchQuery")
+
+        val encodedQuery = URLEncoder.encode(searchQuery, "UTF-8")
+        val imageSearchUrl = "https://api.unsplash.com/search/photos?query=$encodedQuery&per_page=1&orientation=landscape"
+
+        val request = Request.Builder()
+            .url(imageSearchUrl)
+            .addHeader("Authorization", "Client-ID $unsplashApiKey")
+            .build()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = client.newCall(request).execute()
+                val responseBody = response.body?.string()
+
+                Log.d(TAG, "Unsplash API Response Code: ${response.code}")
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (response.isSuccessful && responseBody != null) {
+                        try {
+                            val json = JSONObject(responseBody)
+                            val results = json.getJSONArray("results")
+
+                            if (results.length() > 0) {
+                                val firstImage = results.getJSONObject(0)
+                                val imageUrl = firstImage.getJSONObject("urls").getString("regular")
+
+                                Log.d(TAG, "Found image URL from Unsplash: $imageUrl")
+                                loadImageWithGlide(imageUrl)
+                            } else {
+                                Log.d(TAG, "No images found in Unsplash results")
+                                // Default image sudah di-load sebelumnya
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing Unsplash response", e)
+                            // Default image sudah di-load sebelumnya
+                        }
+                    } else {
+                        Log.e(TAG, "Unsplash search unsuccessful: ${response.code}")
+                        if (response.code == 401) {
+                            Log.e(TAG, "Unsplash API key tidak valid atau expired")
+                        }
+                        // Default image sudah di-load sebelumnya
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception in loadRecipeImage", e)
+                // Default image sudah di-load sebelumnya
+            }
+        }
+    }
+
+    private fun loadImageWithGlide(imageUrl: String) {
+        Log.d(TAG, "Loading image with Glide: $imageUrl")
+
+        context?.let { ctx ->
+            try {
+                Glide.with(ctx)
+                    .load(imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(android.R.color.darker_gray)
+                    .error(android.R.color.darker_gray)
+                    .into(binding.ivRecipeInspiration)
+
+                Log.d(TAG, "Glide load initiated successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading image with Glide", e)
+                binding.ivRecipeInspiration.setImageResource(android.R.color.darker_gray)
+            }
+        }
+    }
+
+    private fun loadDefaultRecipeImage() {
+        Log.d(TAG, "Loading default recipe image")
+
+        // Gunakan array gambar default untuk resep
+        val defaultImages = arrayOf(
+            "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800", // Food preparation
+            "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800", // Food cooking
+            "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800", // Food ingredients
+            "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800"  // Cooking utensils
+        )
+
+        val randomImage = defaultImages.random()
+        Log.d(TAG, "Selected default image: $randomImage")
+        loadImageWithGlide(randomImage)
     }
 
     private fun parseSimple(content: String, ingredients: MutableList<String>, steps: MutableList<String>) {

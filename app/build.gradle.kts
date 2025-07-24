@@ -3,13 +3,24 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
 }
-val apiKey: String = project.findProperty("OPENROUTER_API_KEY") as? String
+
+val openRouterApiKey: String = project.findProperty("OPENROUTER_API_KEY") as? String
     ?: File(rootDir, "local.properties")
         .takeIf { it.exists() }
         ?.readLines()
         ?.firstOrNull { it.startsWith("OPENROUTER_API_KEY=") }
         ?.substringAfter("=")
     ?: throw GradleException("OPENROUTER_API_KEY not found in local.properties or gradle.properties")
+
+val unsplashApiKey: String = project.findProperty("UNSPLASH_ACCESS_KEY") as? String
+    ?: File(rootDir, "local.properties")
+        .takeIf { it.exists() }
+        ?.readLines()
+        ?.firstOrNull { it.startsWith("UNSPLASH_ACCESS_KEY=") }
+        ?.substringAfter("=")
+    ?: throw GradleException("UNSPLASH_ACCESS_KEY not found in local.properties or gradle.properties")
+
+println("Unsplash API Key: $unsplashApiKey") // Tambahkan log ini untuk debugging
 
 android {
     namespace = "com.example.pasar_project_bootcamp"
@@ -23,7 +34,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "OPENROUTER_API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterApiKey\"")
+        buildConfigField("String", "UNSPLASH_ACCESS_KEY", "\"$unsplashApiKey\"")
+
     }
 
     buildFeatures {
@@ -51,7 +64,6 @@ android {
     }
 }
 
-
 dependencies {
     // Core Android
     implementation("androidx.core:core-ktx:1.16.0")
@@ -74,15 +86,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
 
-    // Image Loading
+    // Network & Coroutines
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Image Loading (Glide - cukup satu versi saja)
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-
-    // build.gradle (Module)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }
