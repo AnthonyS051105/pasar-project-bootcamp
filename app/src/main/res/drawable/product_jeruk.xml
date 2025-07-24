@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Orange shape -->
+    <path
+        android:fillColor="#FF9500"
+        android:pathData="M100,170C135,170 160,145 160,110C160,75 135,50 100,50C65,50 40,75 40,110C40,145 65,170 100,170Z"/>
+
+    <!-- Orange texture circles using path -->
+    <path
+        android:fillColor="#FFB84D"
+        android:pathData="M80,87A3,3 0 1,1 80,93A3,3 0 1,1 80,87Z"/>
+    <path
+        android:fillColor="#FFB84D"
+        android:pathData="M120,98A2,2 0 1,1 120,102A2,2 0 1,1 120,98Z"/>
+    <path
+        android:fillColor="#FFB84D"
+        android:pathData="M90,128A2,2 0 1,1 90,132A2,2 0 1,1 90,128Z"/>
+    <path
+        android:fillColor="#FFB84D"
+        android:pathData="M110,78A2,2 0 1,1 110,82A2,2 0 1,1 110,78Z"/>
+
+    <!-- Orange stem -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M95,50L105,50L105,40L95,40Z"/>
+
+    <!-- Small leaf -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M105,45C105,45 115,40 120,45C115,50 105,45 105,45Z"/>
+</vector>

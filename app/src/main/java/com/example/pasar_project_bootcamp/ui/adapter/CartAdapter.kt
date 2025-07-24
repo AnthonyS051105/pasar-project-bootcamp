@@ -3,10 +3,10 @@ package com.example.pasar_project_bootcamp.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.CartItem
 import com.example.pasar_project_bootcamp.databinding.ItemCartBinding
+import com.example.pasar_project_bootcamp.utils.ProductImageHelper
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -38,16 +38,12 @@ class CartAdapter(private val cartItems: List<CartItem>) :
                 tvQuantity.text = cartItem.quantity.toString()
                 tvTotalPrice.text = formatCurrency(cartItem.totalPrice)
 
-                // Load product image (placeholder for now)
-                ivProductImage.setBackgroundColor(
-                    itemView.context.resources.getColor(R.color.gray_200, null)
+                // Load product image using ProductImageHelper
+                val imageResource = ProductImageHelper.getProductImageResource(
+                    cartItem.product.name,
+                    cartItem.product.category
                 )
-
-                // If you have image URL, use Glide:
-                // Glide.with(itemView.context)
-                //     .load(cartItem.product.imageUrl)
-                //     .placeholder(R.color.gray_200)
-                //     .into(ivProductImage)
+                ivProductImage.setImageResource(imageResource)
             }
         }
 

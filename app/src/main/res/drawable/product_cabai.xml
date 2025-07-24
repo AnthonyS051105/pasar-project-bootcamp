@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Chili body -->
+    <path
+        android:fillColor="#F44336"
+        android:pathData="M100,50C110,50 120,60 120,70L115,140C115,155 105,165 100,165C95,165 85,155 85,140L80,70C80,60 90,50 100,50Z"/>
+
+    <!-- Chili highlight -->
+    <path
+        android:fillColor="#FF6B6B"
+        android:pathData="M95,60C98,58 102,58 105,60L102,130C102,135 98,135 98,130L95,60Z"/>
+
+    <!-- Chili stem -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,50L100,35C100,30 105,30 105,35L105,50"/>
+
+    <!-- Chili curve -->
+    <path
+        android:fillColor="#D32F2F"
+        android:pathData="M85,140C82,145 85,150 90,148C95,146 98,142 95,138C92,140 88,142 85,140Z"/>
+</vector>

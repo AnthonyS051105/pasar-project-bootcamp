@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Apple shape -->
+    <path
+        android:fillColor="#FF6B6B"
+        android:pathData="M100,180C140,180 170,150 170,110C170,70 140,40 100,40C60,40 30,70 30,110C30,150 60,180 100,180Z"/>
+
+    <!-- Apple highlight -->
+    <path
+        android:fillColor="#FF8E8E"
+        android:pathData="M80,60C90,50 110,50 120,60C115,55 105,55 100,55C95,55 85,55 80,60Z"/>
+
+    <!-- Apple stem -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,40L100,25C100,20 105,20 105,25L105,40"/>
+
+    <!-- Apple leaf -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M105,35C110,30 120,32 118,38C115,35 110,35 105,35Z"/>
+</vector>
