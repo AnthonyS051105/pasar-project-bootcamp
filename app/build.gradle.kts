@@ -49,6 +49,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 
@@ -79,6 +82,10 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.google.firebase.auth)
 
     // Testing
     testImplementation("junit:junit:4.13.2")

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ui.SignUpActivity">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:contentDescription="Logo Aplikasi" />
+
+
+
+    <EditText
+        android:id="@+id/loginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/greenborderblock"
+        android:paddingHorizontal="16dp"
+        android:hint="Email"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/loginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/greenborderblock"
+        android:paddingHorizontal="16dp"
+        android:hint="Password"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:inputType="textPassword" />
+
+    <Button
+        android:layout_width="310dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/loginButton"
+        android:text="Login"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="Belum memiliki akun? Sign Up"
+        android:textColor="@color/green"
+        android:textSize="14sp"
+        android:id="@+id/signupText"/>
+
+</LinearLayout>
