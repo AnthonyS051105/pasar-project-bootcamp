@@ -29,14 +29,13 @@ android {
     defaultConfig {
         applicationId = "com.example.pasar_project_bootcamp"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34 // Sesuaikan dengan compileSdk
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterApiKey\"")
         buildConfigField("String", "UNSPLASH_ACCESS_KEY", "\"$unsplashApiKey\"")
-
     }
 
     buildFeatures {
@@ -62,13 +61,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures{
-        viewBinding = true
-    }
 }
 
 dependencies {
-    // Core Android - Compatible with compileSdk 33
+    // Core Android - Compatible with compileSdk 34
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -92,22 +88,18 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0") // Hapus duplikasi
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3") // Hapus duplikasi
 
-    // Network & Coroutines
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-     // Lifecycle
+    // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
 
-    // Image Loading (Glide - cukup satu versi saja)
+    // Image Loading (Glide)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-    implementation(libs.google.firebase.auth)
 
     // Testing
     testImplementation("junit:junit:4.13.2")
