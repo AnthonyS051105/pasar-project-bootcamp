@@ -49,6 +49,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 
@@ -76,6 +79,7 @@ dependencies {
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.google.firebase.auth)
 
     // Testing
     testImplementation("junit:junit:4.13.2")
