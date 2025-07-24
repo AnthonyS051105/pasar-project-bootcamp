@@ -13,6 +13,12 @@ import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.FragmentProductListBinding
 import com.example.pasar_project_bootcamp.ui.adapter.ProductAdapter
+import com.example.pasar_project_bootcamp.firebase.FirebaseHelper
+import com.example.pasar_project_bootcamp.repository.ProductRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProductListFragment : Fragment() {
 
@@ -20,6 +26,7 @@ class ProductListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var productAdapter: ProductAdapter
     private var category: String = ""
+    private val productRepository = ProductRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +85,37 @@ class ProductListFragment : Fragment() {
     }
 
     private fun loadProducts() {
-        // Sample products based on category
+        // Show loading state
+        binding.productRecyclerView.alpha = 0.5f
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val products = if (category.isNotEmpty() && category.startsWith("Tuku")) {
+                    // Load products by category from Repository (API + Firebase)
+                    productRepository.getProductsByCategory(category)
+                } else {
+                    // Search query - search from Repository
+                    productRepository.searchProducts(category)
+                }
+
+                binding.productRecyclerView.alpha = 1.0f
+                if (products.isNotEmpty()) {
+                    productAdapter.submitList(products)
+                } else {
+                    // Fallback to sample data if no products found
+                    loadSampleProducts()
+                }
+            } catch (e: Exception) {
+                // Handle error and fallback to sample data
+                binding.productRecyclerView.alpha = 1.0f
+                loadSampleProducts()
+                Toast.makeText(context, "Error loading products: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun loadSampleProducts() {
+        // Fallback sample products
         val products = when (category) {
             "TukuBuah" -> getSampleFruits()
             "TukuSayur" -> getSampleVegetables()
@@ -86,7 +123,6 @@ class ProductListFragment : Fragment() {
             "TukuBenih" -> getSampleSeeds()
             else -> getAllSampleProducts()
         }
-
         productAdapter.submitList(products)
     }
 
