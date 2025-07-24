@@ -13,13 +13,16 @@ import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.FragmentProductListBinding
 import com.example.pasar_project_bootcamp.ui.adapter.ProductAdapter
+import com.example.pasar_project_bootcamp.firebase.FirebaseHelper
 
 class ProductListFragment : Fragment() {
 
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var firebaseHelper: FirebaseHelper
     private var category: String = ""
+    private var allProducts: List<Product> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,8 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        firebaseHelper = FirebaseHelper()
+        
         // Get category from arguments
         category = arguments?.getString("category") ?: ""
 
@@ -78,126 +83,51 @@ class ProductListFragment : Fragment() {
     }
 
     private fun loadProducts() {
-        // Sample products based on category
-        val products = when (category) {
-            "TukuBuah" -> getSampleFruits()
-            "TukuSayur" -> getSampleVegetables()
-            "TukuBumbu" -> getSampleSpices()
-            "TukuBenih" -> getSampleSeeds()
-            else -> getAllSampleProducts()
+        // Show loading state
+        // You could add a progress bar here
+        
+        if (category.isNotEmpty()) {
+            // Load products by category from Firebase
+            firebaseHelper.getProductsByCategory(category) { products ->
+                allProducts = products
+                productAdapter.submitList(products)
+                
+                if (products.isEmpty()) {
+                    Toast.makeText(context, "Tidak ada produk dalam kategori $category", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            // Load all products from Firebase
+            firebaseHelper.getProducts { products ->
+                allProducts = products
+                productAdapter.submitList(products)
+                
+                if (products.isEmpty()) {
+                    Toast.makeText(context, "Tidak ada produk tersedia", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
-
-        productAdapter.submitList(products)
     }
 
     private fun performSearch() {
         val query = binding.searchEditText.text.toString().trim()
         if (query.isNotEmpty()) {
             // Filter products based on search query
-            val filteredProducts = getAllSampleProducts().filter { product ->
+            val filteredProducts = allProducts.filter { product ->
                 product.name.contains(query, ignoreCase = true) ||
-                        product.category.contains(query, ignoreCase = true)
+                        product.description.contains(query, ignoreCase = true) ||
+                        product.category.contains(query, ignoreCase = true) ||
+                        product.farmerName.contains(query, ignoreCase = true)
             }
             productAdapter.submitList(filteredProducts)
+            
+            if (filteredProducts.isEmpty()) {
+                Toast.makeText(context, "Tidak ada produk yang sesuai dengan pencarian", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            loadProducts()
+            // Show all products if search is empty
+            productAdapter.submitList(allProducts)
         }
-    }
-
-    private fun getSampleFruits(): List<Product> {
-        return listOf(
-            Product(
-                id = "1",
-                name = "Buah buah",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBuah",
-                farmerName = "Petani A",
-                stock = 10
-            ),
-            Product(
-                id = "2",
-                name = "Buah buah",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBuah",
-                farmerName = "Petani B",
-                stock = 15
-            )
-        )
-    }
-
-    private fun getSampleVegetables(): List<Product> {
-        return listOf(
-            Product(
-                id = "3",
-                name = "Sayur sayur",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuSayur",
-                farmerName = "Petani C",
-                stock = 20
-            ),
-            Product(
-                id = "4",
-                name = "Sayur sayur",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuSayur",
-                farmerName = "Petani D",
-                stock = 12
-            )
-        )
-    }
-
-    private fun getSampleSpices(): List<Product> {
-        return listOf(
-            Product(
-                id = "5",
-                name = "Bumbu bumbu",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBumbu",
-                farmerName = "Petani E",
-                stock = 8
-            ),
-            Product(
-                id = "6",
-                name = "Bumbu bumbu",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBumbu",
-                farmerName = "Petani F",
-                stock = 25
-            )
-        )
-    }
-
-    private fun getSampleSeeds(): List<Product> {
-        return listOf(
-            Product(
-                id = "7",
-                name = "Benih benih",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBenih",
-                farmerName = "Petani G",
-                stock = 30
-            ),
-            Product(
-                id = "8",
-                name = "Benih benih",
-                price = 150000.0,
-                imageUrl = "",
-                category = "TukuBenih",
-                farmerName = "Petani H",
-                stock = 18
-            )
-        )
-    }
-
-    private fun getAllSampleProducts(): List<Product> {
-        return getSampleFruits() + getSampleVegetables() + getSampleSpices() + getSampleSeeds()
     }
 
     override fun onDestroyView() {
