@@ -1,6 +1,7 @@
 package com.example.pasar_project_bootcamp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.databinding.FragmentHomeBinding
+import com.example.pasar_project_bootcamp.repository.ProductRepository
+import com.example.pasar_project_bootcamp.utils.SampleDataUploader
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    
+    private lateinit var productRepository: ProductRepository
+    private lateinit var sampleDataUploader: SampleDataUploader
+
+    companion object {
+        private const val TAG = "HomeFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +36,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initializeComponents()
         setupClickListeners()
+        initializeSampleData()
+    }
+
+    private fun initializeComponents() {
+        productRepository = ProductRepository()
+        sampleDataUploader = SampleDataUploader()
     }
 
     private fun setupClickListeners() {
@@ -55,6 +72,22 @@ class HomeFragment : Fragment() {
 
         binding.categoryBenih.setOnClickListener {
             navigateToProductList("TukuBenih")
+        }
+    }
+
+    private fun initializeSampleData() {
+        Log.d(TAG, "Initializing sample data...")
+        
+        // Initialize sample data using repository
+        productRepository.initializeSampleData()
+        
+        // Alternative: Use SampleDataUploader for more detailed upload
+        sampleDataUploader.uploadSampleData { success ->
+            if (success) {
+                Log.d(TAG, "Sample data upload successful")
+            } else {
+                Log.w(TAG, "Sample data upload failed")
+            }
         }
     }
 
