@@ -12,7 +12,12 @@
           "package_name": "com.example.pasar_project_bootcamp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "955091675136-8luocnsju1a906krkanlubgn186nb1v6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC2dt0RghQj1Cii1suvTnxdeZkhQsDQiSY"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955091675136-8luocnsju1a906krkanlubgn186nb1v6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
