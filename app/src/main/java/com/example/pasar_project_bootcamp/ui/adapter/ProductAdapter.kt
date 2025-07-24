@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.ItemProductBinding
@@ -42,34 +41,31 @@ class ProductAdapter(
                 val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
                 productPrice.text = formatter.format(product.price)
 
-                // Load product image - handle different sources
-                when {
-                    product.imageUrl.startsWith("http") -> {
-                        // Load from URL (Firebase Storage)
-                        Glide.with(itemView.context)
-                            .load(product.imageUrl)
-                            .placeholder(ProductImageHelper.getProductImageResource(product.name, product.category))
-                            .error(ProductImageHelper.getProductImageResource(product.name, product.category))
-                            .into(productImage)
-                    }
+                // Load product image - simplified approach using only drawable resources
+                val imageResource = when {
                     product.imageUrl.startsWith("drawable://") -> {
                         // Load from drawable reference
                         val drawableName = product.imageUrl.removePrefix("drawable://")
-                        val imageResource = when (drawableName) {
+                        when (drawableName) {
                             "product_apel" -> R.drawable.product_apel
                             "product_jeruk" -> R.drawable.product_jeruk
                             "product_kangkung" -> R.drawable.product_kangkung
                             "product_cabai" -> R.drawable.product_cabai
                             else -> ProductImageHelper.getProductImageResource(product.name, product.category)
                         }
-                        productImage.setImageResource(imageResource)
+                    }
+                    product.imageUrl.startsWith("http") -> {
+                        // For HTTP URLs, use placeholder drawable for now
+                        // In production, you would use an image loading library like Glide or Picasso
+                        ProductImageHelper.getProductImageResource(product.name, product.category)
                     }
                     else -> {
                         // Use helper to determine image based on name/category
-                        val imageResource = ProductImageHelper.getProductImageResource(product.name, product.category)
-                        productImage.setImageResource(imageResource)
+                        ProductImageHelper.getProductImageResource(product.name, product.category)
                     }
                 }
+                
+                productImage.setImageResource(imageResource)
 
                 // Set click listeners
                 root.setOnClickListener {

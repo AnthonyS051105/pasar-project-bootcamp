@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.FragmentProductDetailBinding
+import com.example.pasar_project_bootcamp.utils.ProductImageHelper
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -35,10 +35,10 @@ class ProductDetailFragment : Fragment() {
         // Sample product for demonstration
         product = Product(
             id = "1",
-            name = "Buah buahan satu",
-            description = "Buah segar berkualitas tinggi langsung dari kebun petani lokal. Kaya akan vitamin dan mineral yang baik untuk kesehatan tubuh.",
+            name = "Apel Malang",
+            description = "Buah apel segar berkualitas tinggi langsung dari kebun petani lokal. Kaya akan vitamin dan mineral yang baik untuk kesehatan tubuh.",
             price = 150000.0,
-            imageUrl = "", // Would be loaded from Firebase Storage
+            imageUrl = "drawable://product_apel",
             farmerId = "farmer1",
             farmerName = "Toko Beli Beli",
             farmerAddress = "Alamat Toko Beli Beli",
@@ -54,8 +54,12 @@ class ProductDetailFragment : Fragment() {
 
     private fun setupUI() {
         with(binding) {
-            // Load product image (placeholder for now)
-            ivProductImage.setBackgroundColor(resources.getColor(R.color.gray_200, null))
+            // Load product image using ProductImageHelper
+            val imageResource = ProductImageHelper.getProductImageResource(
+                product.name, 
+                product.category
+            )
+            ivProductImage.setImageResource(imageResource)
 
             // Set product details
             tvPrice.text = formatCurrency(product.price)
