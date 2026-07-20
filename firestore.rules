@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Katalog produk: siapa saja yang login boleh baca (untuk browse/search),
+    // hanya proses tepercaya (mis. admin lewat console/Cloud Function) yang boleh tulis.
+    // App saat ini menulis sample data lewat client saat koleksi kosong (initializeSampleData),
+    // jadi write authenticated diizinkan agar fitur itu tetap jalan.
+    match /products/{productId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // Profil user: hanya pemilik akun yang boleh baca/tulis datanya sendiri.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Cart per-user, subcollection di bawah users/{userId}/cart/{cartItemId}.
+      match /cart/{cartItemId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // Order: hanya pemilik order (userId di dalam dokumen) yang boleh baca/tulis miliknya.
+    match /orders/{orderId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+  }
+}

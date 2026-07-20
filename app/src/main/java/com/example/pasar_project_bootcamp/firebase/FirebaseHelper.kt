@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.data.Order
 import com.example.pasar_project_bootcamp.data.CartItem
+import com.example.pasar_project_bootcamp.data.UserProfile
 
 class FirebaseHelper {
 
@@ -198,7 +199,7 @@ class FirebaseHelper {
         Log.d(TAG, "Fetching orders for user: $userId")
         firestore.collection("orders")
             .whereEqualTo("userId", userId)
-            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .orderBy("orderDate", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
                 val orders = documents.mapNotNull { doc ->
@@ -290,6 +291,33 @@ class FirebaseHelper {
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Error accessing cart for user $userId", exception)
                 callback(false)
+            }
+    }
+
+    // User Profile
+    fun getUserProfile(uid: String, callback: (UserProfile?) -> Unit) {
+        Log.d(TAG, "Fetching user profile for uid: $uid")
+        firestore.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    try {
+                        val profile = document.toObject(UserProfile::class.java)
+                        Log.d(TAG, "Successfully fetched user profile: ${profile?.email}")
+                        callback(profile)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error parsing user profile document: $uid", e)
+                        callback(null)
+                    }
+                } else {
+                    Log.w(TAG, "User profile not found: $uid")
+                    callback(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Error fetching user profile: $uid", exception)
+                callback(null)
             }
     }
 

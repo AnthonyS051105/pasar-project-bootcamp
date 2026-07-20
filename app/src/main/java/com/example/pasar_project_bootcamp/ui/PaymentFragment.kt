@@ -5,17 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.pasar_project_bootcamp.data.CartItem
-import com.example.pasar_project_bootcamp.data.Order
-import com.example.pasar_project_bootcamp.data.OrderStatus
-import com.example.pasar_project_bootcamp.data.Product
+import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.databinding.FragmentPaymentBinding
 import com.example.pasar_project_bootcamp.ui.adapter.CartAdapter
+import com.example.pasar_project_bootcamp.ui.viewmodel.PaymentUiState
+import com.example.pasar_project_bootcamp.ui.viewmodel.PaymentViewModel
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.util.Date
 import java.util.Locale
 
 class PaymentFragment : Fragment() {
@@ -23,8 +27,8 @@ class PaymentFragment : Fragment() {
     private var _binding: FragmentPaymentBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: PaymentViewModel by viewModels()
     private lateinit var cartAdapter: CartAdapter
-    private val cartItems = mutableListOf<CartItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,45 +43,61 @@ class PaymentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        loadSampleData()
+        observeCart()
+        observeUiState()
         setupClickListeners()
         setupPaymentMethodListener()
     }
 
     private fun setupRecyclerView() {
-        cartAdapter = CartAdapter(cartItems)
+        cartAdapter = CartAdapter(cartItems = emptyList(), editable = false)
         binding.rvPaymentItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = cartAdapter
         }
     }
 
-    private fun loadSampleData() {
-        // Sample cart items for demonstration
-        val sampleProduct = Product(
-            id = "1",
-            name = "Buah buahan satu",
-            price = 150000.0,
-            imageUrl = "",
-            farmerName = "Toko Beli Beli"
-        )
-
-        cartItems.add(
-            CartItem(
-                id = "1",
-                product = sampleProduct,
-                quantity = 1,
-                totalPrice = sampleProduct.price
-            )
-        )
-
-        cartAdapter.notifyDataSetChanged()
-        updateTotalAmount()
+    private fun observeCart() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.cartItems.collect { items ->
+                    cartAdapter.submitList(items)
+                    val total = items.sumOf { it.totalPrice }
+                    binding.tvTotalPayment.text = formatCurrency(total)
+                }
+            }
+        }
     }
 
-    private fun updateTotalAmount() {
-        val total = cartItems.sumOf { it.totalPrice }
-        binding.tvTotalPayment.text = formatCurrency(total)
+    private fun observeUiState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is PaymentUiState.Idle -> {
+                            binding.btnBuatPesanan.isEnabled = true
+                        }
+                        is PaymentUiState.Loading -> {
+                            binding.btnBuatPesanan.isEnabled = false
+                        }
+                        is PaymentUiState.Success -> {
+                            binding.btnBuatPesanan.isEnabled = true
+                            findNavController().navigate(
+                                R.id.action_payment_to_orderSuccess,
+                                bundleOf(
+                                    "orderId" to state.orderId,
+                                    "totalAmount" to state.totalAmount.toFloat()
+                                )
+                            )
+                        }
+                        is PaymentUiState.Error -> {
+                            binding.btnBuatPesanan.isEnabled = true
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setupPaymentMethodListener() {
@@ -108,11 +128,6 @@ class PaymentFragment : Fragment() {
     private fun processOrder() {
         val deliveryAddress = binding.etDeliveryAddress.text.toString().trim()
 
-        if (deliveryAddress.isEmpty()) {
-            Toast.makeText(requireContext(), "Alamat pengiriman tidak boleh kosong", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val paymentMethod = when (binding.rgPaymentMethod.checkedRadioButtonId) {
             binding.rbCOD.id -> "COD"
             binding.rbBankTransfer.id -> "Bank Transfer"
@@ -120,7 +135,6 @@ class PaymentFragment : Fragment() {
             else -> "COD"
         }
 
-        // Validate payment details if not COD
         if (paymentMethod != "COD" && binding.llPaymentDetails.visibility == View.VISIBLE) {
             val paymentAccount = binding.etPaymentAccount.text.toString().trim()
             val accountName = binding.etAccountName.text.toString().trim()
@@ -131,37 +145,7 @@ class PaymentFragment : Fragment() {
             }
         }
 
-        // Create order
-        val order = Order(
-            id = generateOrderId(),
-            userId = "user123", // Would come from Firebase Auth
-            items = cartItems.toList(),
-            totalAmount = cartItems.sumOf { it.totalPrice },
-            deliveryAddress = deliveryAddress,
-            orderDate = Date(),
-            status = OrderStatus.PENDING,
-            paymentMethod = paymentMethod
-        )
-
-        // Save order to Firebase (implementation would be here)
-        saveOrderToFirebase(order)
-
-        Toast.makeText(requireContext(), "Pesanan berhasil dibuat!", Toast.LENGTH_SHORT).show()
-
-        // Navigate back to home or order confirmation
-        findNavController().popBackStack()
-    }
-
-    private fun generateOrderId(): String {
-        return "ORDER_${System.currentTimeMillis()}"
-    }
-
-    private fun saveOrderToFirebase(order: Order) {
-        // Implementation would save order to Firebase Firestore
-        // FirebaseFirestore.getInstance()
-        //     .collection("orders")
-        //     .document(order.id)
-        //     .set(order)
+        viewModel.submitOrder(deliveryAddress, paymentMethod)
     }
 
     private fun formatCurrency(amount: Double): String {

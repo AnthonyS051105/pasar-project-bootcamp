@@ -1,18 +1,24 @@
 package com.example.pasar_project_bootcamp.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pasar_project_bootcamp.R
-import com.example.pasar_project_bootcamp.data.CartItem
-import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.FragmentOrderDetailBinding
 import com.example.pasar_project_bootcamp.ui.adapter.CartAdapter
+import com.example.pasar_project_bootcamp.ui.viewmodel.CartViewModel
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -21,8 +27,9 @@ class OrderDetailFragment : Fragment() {
     private var _binding: FragmentOrderDetailBinding? = null
     private val binding get() = _binding!!
 
+    private val cartViewModel: CartViewModel by viewModels()
     private lateinit var cartAdapter: CartAdapter
-    private val cartItems = mutableListOf<CartItem>()
+    private var deliveryAddress: String = "Jl. Contoh Alamat No. 123, Jakarta"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,60 +44,49 @@ class OrderDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        loadSampleData()
         setupClickListeners()
+        observeCart()
+        binding.tvDeliveryAddress.text = deliveryAddress
     }
 
     private fun setupRecyclerView() {
-        cartAdapter = CartAdapter(cartItems)
+        cartAdapter = CartAdapter(
+            cartItems = emptyList(),
+            editable = true,
+            onQuantityChange = { item, newQty -> cartViewModel.updateQuantity(item.id, newQty) },
+            onRemoveItem = { item -> cartViewModel.removeItem(item.id) }
+        )
         binding.rvOrderItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = cartAdapter
         }
     }
 
-    private fun loadSampleData() {
-        // Sample cart items for demonstration
-        val sampleProduct = Product(
-            id = "1",
-            name = "Buah buahan satu",
-            price = 150000.0,
-            imageUrl = "",
-            farmerName = "Toko Beli Beli"
-        )
-
-        cartItems.add(
-            CartItem(
-                id = "1",
-                product = sampleProduct,
-                quantity = 1,
-                totalPrice = sampleProduct.price
-            )
-        )
-
-        cartAdapter.notifyDataSetChanged()
-        updateTotalAmount()
+    private fun observeCart() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                cartViewModel.items.collect { items ->
+                    cartAdapter.submitList(items)
+                    updateTotalAmount()
+                }
+            }
+        }
     }
 
     private fun updateTotalAmount() {
-        val total = cartItems.sumOf { it.totalPrice }
-        binding.tvTotalAmount.text = formatCurrency(total)
+        binding.tvTotalAmount.text = formatCurrency(cartViewModel.getTotal())
     }
 
-    // Implementasi Anda sendiri untuk mengambil ingredients dari cart
     private fun getIngredientsFromYourCart(): ArrayList<String> {
         val ingredients = ArrayList<String>()
-
-        for (item in cartItems) {
+        for (item in cartViewModel.items.value) {
             val name = item.product.name.trim()
             if (name.isNotEmpty()) {
                 ingredients.add(name)
             }
         }
-
         return ingredients
     }
-
 
     private fun openRecipeInspiration() {
         val ingredients = getIngredientsFromYourCart()
@@ -107,6 +103,25 @@ class OrderDetailFragment : Fragment() {
         findNavController().navigate(R.id.action_orderDetail_to_recipe, bundle)
     }
 
+    private fun showChangeAddressDialog() {
+        val editText = EditText(requireContext()).apply {
+            setText(deliveryAddress)
+            setPadding(48, 32, 48, 32)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Ubah Alamat Pengiriman")
+            .setView(editText)
+            .setPositiveButton("Simpan") { _, _ ->
+                val newAddress = editText.text.toString().trim()
+                if (newAddress.isNotEmpty()) {
+                    deliveryAddress = newAddress
+                    binding.tvDeliveryAddress.text = deliveryAddress
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
 
     private fun setupClickListeners() {
         with(binding) {
@@ -116,16 +131,18 @@ class OrderDetailFragment : Fragment() {
 
             btnRecipeInspiration.setOnClickListener {
                 openRecipeInspiration()
-
             }
 
             btnPesan.setOnClickListener {
-                // Navigate to payment screen
+                if (cartViewModel.items.value.isEmpty()) {
+                    Toast.makeText(requireContext(), "Keranjang masih kosong", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 findNavController().navigate(R.id.action_orderDetail_to_payment)
             }
 
             btnChangeAddress.setOnClickListener {
-                // Show address selection dialog or navigate to address screen
+                showChangeAddressDialog()
             }
         }
     }

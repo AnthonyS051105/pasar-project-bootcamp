@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Green Theme Colors -->
+    <!-- Green Theme Colors (legacy, kept for compatibility) -->
     <color name="green_primary">#4CAF50</color>
     <color name="green_secondary">#66BB6A</color>
     <color name="green_light">#C8E6C9</color>
@@ -18,4 +18,35 @@
 
     <!-- Other Colors -->
     <color name="yellow_star">#FFC107</color>
+
+    <!-- ===================== Claymorphism Palette v2 ===================== -->
+    <!-- Base surfaces: light, airy, near-white pastel (not solid green) -->
+    <color name="clay_background">#F1F4EF</color>
+    <color name="clay_surface">#FFFFFF</color>
+    <color name="clay_surface_alt">#F6F8F4</color>
+    <color name="clay_header">#EAF3EA</color>
+
+    <!-- Brand green, used as accent only (buttons, icons, highlights) -->
+    <color name="clay_green_700">#2F8049</color>
+    <color name="clay_green_600">#3E9C57</color>
+    <color name="clay_green_500">#4FB868</color>
+    <color name="clay_green_300">#A8DDB5</color>
+    <color name="clay_green_100">#E3F5E6</color>
+
+    <!-- Dual soft-shadow pair, stronger offset for a real "raised clay" feel -->
+    <color name="clay_shadow_dark">#402B3B2F</color>
+    <color name="clay_shadow_light">#FFFFFFFF</color>
+    <color name="clay_shadow_dark_soft">#1F2B3B2F</color>
+
+    <!-- Status accents (pastel) -->
+    <color name="clay_success">#4FB868</color>
+    <color name="clay_warning">#F0B84E</color>
+    <color name="clay_error">#EA6F63</color>
+    <color name="clay_error_soft">#FBDAD6</color>
+
+    <!-- Text -->
+    <color name="clay_text_primary">#20261F</color>
+    <color name="clay_text_secondary">#6E7A6C</color>
+    <color name="clay_text_tertiary">#9AA398</color>
+    <color name="clay_text_on_green">#FFFFFF</color>
 </resources>

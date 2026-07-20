@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_homeFragment_to_productListFragment"
             app:destination="@id/productListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
     </fragment>
 
     <!-- Search Fragment -->
@@ -38,7 +41,13 @@
         tools:layout="@layout/fragment_product_list">
         <argument
             android:name="category"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="searchQuery"
+            app:argType="string"
+            android:defaultValue=""
+            app:nullable="true" />
         <action
             android:id="@+id/action_productListFragment_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
@@ -79,11 +88,48 @@
         android:id="@+id/paymentFragment"
         android:name="com.example.pasar_project_bootcamp.ui.PaymentFragment"
         android:label="Payment"
-        tools:layout="@layout/fragment_payment" />
+        tools:layout="@layout/fragment_payment">
+        <action
+            android:id="@+id/action_payment_to_orderSuccess"
+            app:destination="@id/orderSuccessFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.example.pasar_project_bootcamp.ui.RecipeFragment"
         android:label="Recipe Inspiration"
         tools:layout="@layout/fragment_recipe" />
+
+    <!-- Cart Fragment -->
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.pasar_project_bootcamp.ui.CartFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cartFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
+    </fragment>
+
+    <!-- Order Success Fragment -->
+    <fragment
+        android:id="@+id/orderSuccessFragment"
+        android:name="com.example.pasar_project_bootcamp.ui.OrderSuccessFragment"
+        android:label="Order Success"
+        tools:layout="@layout/fragment_order_success">
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+        <argument
+            android:name="totalAmount"
+            app:argType="float" />
+    </fragment>
+
+    <!-- Profile Fragment -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.pasar_project_bootcamp.ui.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
 </navigation>

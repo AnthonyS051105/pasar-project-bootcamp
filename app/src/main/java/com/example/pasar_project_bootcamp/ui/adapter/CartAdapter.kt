@@ -3,15 +3,23 @@ package com.example.pasar_project_bootcamp.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.data.CartItem
 import com.example.pasar_project_bootcamp.databinding.ItemCartBinding
 import com.example.pasar_project_bootcamp.utils.ProductImageHelper
 import java.text.NumberFormat
 import java.util.Locale
 
-class CartAdapter(private val cartItems: List<CartItem>) :
-    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+class CartAdapter(
+    private var cartItems: List<CartItem>,
+    private val editable: Boolean = true,
+    private val onQuantityChange: (CartItem, Int) -> Unit = { _, _ -> },
+    private val onRemoveItem: (CartItem) -> Unit = {}
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+
+    fun submitList(items: List<CartItem>) {
+        cartItems = items
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val binding = ItemCartBinding.inflate(
@@ -38,12 +46,31 @@ class CartAdapter(private val cartItems: List<CartItem>) :
                 tvQuantity.text = cartItem.quantity.toString()
                 tvTotalPrice.text = formatCurrency(cartItem.totalPrice)
 
-                // Load product image using ProductImageHelper
                 val imageResource = ProductImageHelper.getProductImageResource(
                     cartItem.product.name,
                     cartItem.product.category
                 )
                 ivProductImage.setImageResource(imageResource)
+
+                if (editable) {
+                    btnIncrease.visibility = android.view.View.VISIBLE
+                    btnDecrease.visibility = android.view.View.VISIBLE
+                    btnRemove.visibility = android.view.View.VISIBLE
+
+                    btnIncrease.setOnClickListener {
+                        onQuantityChange(cartItem, cartItem.quantity + 1)
+                    }
+                    btnDecrease.setOnClickListener {
+                        onQuantityChange(cartItem, cartItem.quantity - 1)
+                    }
+                    btnRemove.setOnClickListener {
+                        onRemoveItem(cartItem)
+                    }
+                } else {
+                    btnIncrease.visibility = android.view.View.GONE
+                    btnDecrease.visibility = android.view.View.GONE
+                    btnRemove.visibility = android.view.View.GONE
+                }
             }
         }
 

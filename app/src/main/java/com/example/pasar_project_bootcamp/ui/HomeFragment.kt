@@ -1,28 +1,32 @@
 package com.example.pasar_project_bootcamp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pasar_project_bootcamp.R
 import com.example.pasar_project_bootcamp.databinding.FragmentHomeBinding
-import com.example.pasar_project_bootcamp.repository.ProductRepository
-import com.example.pasar_project_bootcamp.utils.SampleDataUploader
+import com.example.pasar_project_bootcamp.ui.adapter.ProductAdapter
+import com.example.pasar_project_bootcamp.ui.viewmodel.HomeViewModel
+import com.example.pasar_project_bootcamp.utils.BottomNavTab
+import com.example.pasar_project_bootcamp.utils.setActiveTab
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var productRepository: ProductRepository
-    private lateinit var sampleDataUploader: SampleDataUploader
-
-    companion object {
-        private const val TAG = "HomeFragment"
-    }
+    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,28 +40,53 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeComponents()
+        setupGreeting()
+        setupProductList()
         setupClickListeners()
-        initializeSampleData()
+        setupBottomNav()
+        observeProducts()
     }
 
-    private fun initializeComponents() {
-        productRepository = ProductRepository()
-        sampleDataUploader = SampleDataUploader()
+    private fun setupGreeting() {
+        val email = FirebaseAuth.getInstance().currentUser?.email
+        val name = email?.substringBefore("@") ?: "Pengguna"
+        binding.welcomeText.text = "Hai, $name!"
+    }
+
+    private fun setupProductList() {
+        productAdapter = ProductAdapter(
+            onProductClick = { product ->
+                val bundle = Bundle().apply {
+                    putString("productId", product.id)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_productDetailFragment, bundle)
+            }
+        )
+        binding.homeProductRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = productAdapter
+        }
+    }
+
+    private fun observeProducts() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.products.collect { products ->
+                    productAdapter.submitList(products)
+                }
+            }
+        }
     }
 
     private fun setupClickListeners() {
-        // Search bar click listener
         binding.searchBar.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
 
-        // Cart icon click listener
         binding.cartIcon.setOnClickListener {
-            // Navigate to cart (if implemented)
+            findNavController().navigate(R.id.cartFragment)
         }
 
-        // Category click listeners
         binding.categoryBuah.setOnClickListener {
             navigateToProductList("TukuBuah")
         }
@@ -75,19 +104,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initializeSampleData() {
-        Log.d(TAG, "Initializing sample data...")
-
-        // Initialize sample data using repository
-        productRepository.initializeSampleData()
-
-        // Alternative: Use SampleDataUploader for more detailed upload
-        sampleDataUploader.uploadSampleData { success ->
-            if (success) {
-                Log.d(TAG, "Sample data upload successful")
-            } else {
-                Log.w(TAG, "Sample data upload failed")
-            }
+    private fun setupBottomNav() {
+        binding.bottomNavigation.setActiveTab(BottomNavTab.HOME)
+        binding.bottomNavigation.navCart.setOnClickListener {
+            findNavController().navigate(R.id.cartFragment)
+        }
+        binding.bottomNavigation.navProfile.setOnClickListener {
+            findNavController().navigate(R.id.profileFragment)
         }
     }
 
