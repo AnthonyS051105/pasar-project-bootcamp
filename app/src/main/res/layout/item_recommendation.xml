@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/clay_card_pressed"
     android:orientation="horizontal"
     android:padding="16dp">
 
@@ -12,14 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Buah buah"
-        android:textColor="@android:color/black"
+        android:textColor="@color/clay_text_primary"
         android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="satu"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="14sp" />
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_search"
+        android:tint="@color/clay_text_secondary" />
 
 </LinearLayout>

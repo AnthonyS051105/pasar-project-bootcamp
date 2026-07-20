@@ -4,7 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4CAF50">
+    android:background="@color/clay_background">
+
+    <!-- Bottom Navigation -->
+    <include
+        android:id="@+id/bottomNavigation"
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Scrollable Content -->
     <ScrollView
@@ -12,163 +22,193 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp">
+            android:paddingBottom="24dp">
+
+            <!-- Soft header band, brand accent only at the top -->
+            <View
+                android:id="@+id/headerBand"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:background="@color/clay_header"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Top Section with Search and Cart -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/topSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/appTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="TukuTani"
+                    android:textColor="@color/clay_green_700"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.01"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/cartIcon" />
+
                 <!-- Search Bar -->
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:id="@+id/searchBar"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="14dp"
                     android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp"
+                    android:background="@drawable/clay_input_field"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp"
                     app:layout_constraintEnd_toStartOf="@+id/cartIcon"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/appTitle">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_search"
+                        android:tint="@color/clay_text_tertiary" />
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_search"
-                            android:tint="@android:color/darker_gray" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:text="Cari produk segar..."
+                        android:textColor="@color/clay_text_tertiary"
+                        android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:text="Cari produk..."
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="16sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
                 <!-- Cart Icon -->
                 <ImageView
                     android:id="@+id/cartIcon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/circle_background"
-                    android:padding="12dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/clay_circle_icon"
+                    android:padding="14dp"
                     android:src="@drawable/ic_shopping_cart"
-                    android:tint="@android:color/white"
+                    android:tint="@color/clay_green_700"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/appTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Welcome Section -->
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:id="@+id/welcomeCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/clay_card_default"
+                android:orientation="vertical"
+                android:padding="22dp"
                 app:layout_constraintTop_toBottomOf="@+id/topSection">
+
+                <TextView
+                    android:id="@+id/welcomeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hai, John Doe!"
+                    android:textColor="@color/clay_text_primary"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/clay_input_field"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Saldo TukuPay Kamu"
+                        android:textColor="@color/clay_text_secondary"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hai, John Doe!"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"
+                        android:text="Bayar"
+                        android:textColor="@color/clay_green_700"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/search_background"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Saldo TukuPay Kamu"
-                            android:textColor="@android:color/black"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bayar"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Top Up"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Lainnya"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
+                        android:layout_marginStart="10dp"
+                        android:text="Top Up"
+                        android:textColor="@color/clay_green_700"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Rp 150.000,00"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
+                        android:layout_marginStart="10dp"
+                        android:text="Lainnya"
+                        android:textColor="@color/clay_green_700"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Rp 150.000,00"
+                    android:textColor="@color/clay_text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <!-- Categories Section -->
+            <TextView
+                android:id="@+id/categoriesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:text="Kategori"
+                android:textColor="@color/clay_text_primary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/welcomeCard" />
+
             <LinearLayout
                 android:id="@+id/categoriesSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal"
                 android:weightSum="4"
-                app:layout_constraintTop_toBottomOf="@+id/welcomeCard">
+                app:layout_constraintTop_toBottomOf="@+id/categoriesTitle">
 
                 <!-- TukuBuah -->
                 <LinearLayout
@@ -180,29 +220,21 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_store"
-                            android:tint="#4CAF50" />
-
-                    </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:background="@drawable/clay_circle_icon"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_store"
+                        android:tint="@color/clay_green_700" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="TukuBuah"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textColor="@color/clay_text_primary"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -217,29 +249,21 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_store"
-                            android:tint="#4CAF50" />
-
-                    </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:background="@drawable/clay_circle_icon"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_store"
+                        android:tint="@color/clay_green_700" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="TukuSayur"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textColor="@color/clay_text_primary"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -254,29 +278,21 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_store"
-                            android:tint="#4CAF50" />
-
-                    </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:background="@drawable/clay_circle_icon"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_store"
+                        android:tint="@color/clay_green_700" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="TukuBumbu"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textColor="@color/clay_text_primary"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -291,29 +307,21 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_store"
-                            android:tint="#4CAF50" />
-
-                    </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:background="@drawable/clay_circle_icon"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_store"
+                        android:tint="@color/clay_green_700" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="TukuBenih"
-                        android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textColor="@color/clay_text_primary"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -321,151 +329,33 @@
             </LinearLayout>
 
             <!-- Products Section -->
-            <LinearLayout
-                android:id="@+id/productsSection"
+            <TextView
+                android:id="@+id/productsSectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:text="Produk Untuk Kamu"
+                android:textColor="@color/clay_text_primary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categoriesSection" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/homeProductRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="14dp"
+                android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                app:layout_constraintTop_toBottomOf="@+id/categoriesSection">
-
-                <!-- Product 1 -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:background="@android:color/darker_gray" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Buah buah"
-                                android:textColor="@android:color/black"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Rp 150.000,00"
-                                android:textColor="#4CAF50"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Product 2 -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:background="@android:color/darker_gray" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Sayur sayur"
-                                android:textColor="@android:color/black"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Rp 150.000,00"
-                                android:textColor="#4CAF50"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
+                android:paddingStart="20dp"
+                android:paddingEnd="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/productsSectionTitle"
+                tools:listitem="@layout/item_product" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <!-- Bottom Navigation -->
-    <LinearLayout
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#2E7D32"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_store"
-            android:tint="@android:color/white" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_shopping_cart"
-            android:tint="@android:color/white" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_store"
-            android:tint="@android:color/white" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

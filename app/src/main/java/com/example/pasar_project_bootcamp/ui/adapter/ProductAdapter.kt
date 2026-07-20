@@ -2,10 +2,12 @@ package com.example.pasar_project_bootcamp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pasar_project_bootcamp.R
+import com.example.pasar_project_bootcamp.data.CartManager
 import com.example.pasar_project_bootcamp.data.Product
 import com.example.pasar_project_bootcamp.databinding.ItemProductBinding
 import com.example.pasar_project_bootcamp.utils.ProductImageHelper
@@ -13,7 +15,10 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class ProductAdapter(
-    private val onProductClick: (Product) -> Unit
+    private val onProductClick: (Product) -> Unit,
+    private val onAddToCart: (Product) -> Unit = { product ->
+        CartManager.addItem(product, 1)
+    }
 ) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -37,14 +42,11 @@ class ProductAdapter(
             binding.apply {
                 productName.text = product.name
 
-                // Format price in Indonesian Rupiah
                 val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
                 productPrice.text = formatter.format(product.price)
 
-                // Load product image - simplified approach using only drawable resources
                 val imageResource = when {
                     product.imageUrl.startsWith("drawable://") -> {
-                        // Load from drawable reference
                         val drawableName = product.imageUrl.removePrefix("drawable://")
                         when (drawableName) {
                             "product_apel" -> R.drawable.product_apel
@@ -55,31 +57,30 @@ class ProductAdapter(
                         }
                     }
                     product.imageUrl.startsWith("http") -> {
-                        // For HTTP URLs, use placeholder drawable for now
-                        // In production, you would use an image loading library like Glide or Picasso
                         ProductImageHelper.getProductImageResource(product.name, product.category)
                     }
                     else -> {
-                        // Use helper to determine image based on name/category
                         ProductImageHelper.getProductImageResource(product.name, product.category)
                     }
                 }
 
                 productImage.setImageResource(imageResource)
 
-                // Set click listeners
-                root.setOnClickListener {
+                cardContainer.setOnClickListener {
                     onProductClick(product)
                 }
 
                 favoriteButton.setOnClickListener {
-                    // Toggle favorite state
                     favoriteButton.isSelected = !favoriteButton.isSelected
                 }
 
                 cartButton.setOnClickListener {
-                    // Add to cart functionality
-                    onProductClick(product)
+                    onAddToCart(product)
+                    Toast.makeText(
+                        cardContainer.context,
+                        "${product.name} ditambahkan ke keranjang",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

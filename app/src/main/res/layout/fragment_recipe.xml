@@ -4,14 +4,20 @@
     android:id="@+id/recipeContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/clay_background"
     android:orientation="vertical">
+
+    <!-- Status Bar Space -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/clay_header" />
 
     <!-- Top Navigation Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/green_primary"
+        android:background="@color/clay_header"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp">
 
@@ -20,7 +26,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_back"
-            android:tint="@android:color/white" />
+            android:tint="@color/clay_green_700" />
 
         <TextView
             android:id="@+id/tvHeader"
@@ -29,7 +35,7 @@
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:text="Inspirasi Resep"
-            android:textColor="@android:color/white"
+            android:textColor="@color/clay_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -47,63 +53,66 @@
             android:padding="16dp">
 
             <!-- Gambar -->
-            <androidx.cardview.widget.CardView
+            <ImageView
+                android:id="@+id/ivRecipeInspiration"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
+                android:background="@color/clay_green_100"
+                android:scaleType="centerCrop" />
 
-                <ImageView
-                    android:id="@+id/ivRecipeInspiration"
+            <!-- Judul & Bahan & Langkah -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/clay_card_default"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:id="@+id/tvJudul"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:background="@color/gray_200" />
-            </androidx.cardview.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Judul Resep"
+                    android:textColor="@color/clay_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <!-- Judul -->
-            <TextView
-                android:id="@+id/tvJudul"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Judul Resep"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Bahan-bahan"
+                    android:textColor="@color/clay_text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <!-- Bahan -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bahan-bahan"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginTop="12dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvIngredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="false" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvIngredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Langkah-langkah"
+                    android:textColor="@color/clay_text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <!-- Langkah -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Langkah-langkah"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSteps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:nestedScrollingEnabled="false" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvSteps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
-

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomNavContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/clay_bottom_nav"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingTop="12dp"
+    android:paddingBottom="20dp"
+    android:weightSum="3">
+
+    <LinearLayout
+        android:id="@+id/navHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:paddingVertical="4dp">
+
+        <ImageView
+            android:id="@+id/navHomeIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_store"
+            android:tint="@color/clay_text_tertiary" />
+
+        <TextView
+            android:id="@+id/navHomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Home"
+            android:textColor="@color/clay_text_tertiary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/navHomeIndicator"
+            android:layout_width="18dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/clay_nav_indicator"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navCart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:paddingVertical="4dp">
+
+        <ImageView
+            android:id="@+id/navCartIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_shopping_cart"
+            android:tint="@color/clay_text_tertiary" />
+
+        <TextView
+            android:id="@+id/navCartText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Cart"
+            android:textColor="@color/clay_text_tertiary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/navCartIndicator"
+            android:layout_width="18dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/clay_nav_indicator"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/navProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:paddingVertical="4dp">
+
+        <ImageView
+            android:id="@+id/navProfileIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_person"
+            android:tint="@color/clay_text_tertiary" />
+
+        <TextView
+            android:id="@+id/navProfileText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Profile"
+            android:textColor="@color/clay_text_tertiary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/navProfileIndicator"
+            android:layout_width="18dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/clay_nav_indicator"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+</LinearLayout>

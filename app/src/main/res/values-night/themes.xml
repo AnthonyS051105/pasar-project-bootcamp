@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (dark). -->
     <style name="Base.Theme.Pasarprojectbootcamp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/clay_green_500</item>
+        <item name="colorPrimaryVariant">@color/clay_green_700</item>
+        <item name="colorSecondary">@color/clay_green_300</item>
+        <item name="android:statusBarColor">@color/clay_background</item>
+        <item name="android:windowBackground">@color/clay_background</item>
+        <item name="android:navigationBarColor">@color/clay_background</item>
     </style>
 </resources>

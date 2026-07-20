@@ -3,21 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4CAF50"
+    android:background="@color/clay_background"
     android:orientation="vertical">
 
     <!-- Status Bar Space -->
     <View
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:background="#4CAF50" />
+        android:background="@color/clay_header" />
 
     <!-- Top Bar with Search -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#4CAF50"
+        android:background="@color/clay_header"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="16dp">
 
         <!-- Back Button -->
@@ -25,19 +26,18 @@
             android:id="@+id/backButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_search"
-            android:tint="@android:color/white" />
+            android:layout_marginEnd="14dp"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/clay_green_700" />
 
         <!-- Search Bar -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="14dp"
             android:layout_weight="1"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="2dp">
+            android:background="@drawable/clay_input_field"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/searchEditText"
@@ -47,23 +47,24 @@
                 android:hint="Cari produk..."
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:textSize="16sp" />
+                android:textColor="@color/clay_text_primary"
+                android:textColorHint="@color/clay_text_tertiary"
+                android:textSize="15sp" />
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
         <!-- Filter Button -->
         <ImageView
             android:id="@+id/filterButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_search"
-            android:tint="@android:color/white" />
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/clay_circle_icon"
+            android:padding="11dp"
+            android:src="@drawable/ic_filter"
+            android:tint="@color/clay_green_700" />
 
     </LinearLayout>
 
@@ -73,7 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/white"
-        android:padding="16dp" />
+        android:background="@color/clay_background"
+        android:padding="16dp"
+        android:clipToPadding="false" />
 
 </LinearLayout>

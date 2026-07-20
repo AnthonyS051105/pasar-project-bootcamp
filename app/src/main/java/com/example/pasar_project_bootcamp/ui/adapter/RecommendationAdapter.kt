@@ -6,9 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pasar_project_bootcamp.databinding.ItemRecommendationBinding
 
 class RecommendationAdapter(
-    private val recommendations: List<String>,
+    private var recommendations: List<String>,
     private val onRecommendationClick: (String) -> Unit
 ) : RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
+
+    fun updateData(items: List<String>) {
+        recommendations = items
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationViewHolder {
         val binding = ItemRecommendationBinding.inflate(
